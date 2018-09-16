@@ -18,13 +18,13 @@ UserSchema.pre("save", async function(next) {
 	}
 
 	const salt = await bcrypt.genSalt(10);
-	const hash = bcrypt.hash(this.password, salt);
+	const hash = await bcrypt.hash(this.password, salt);
 
 	this.password = hash;
 	next();
 })
 
-UserSchema.methods.comaprePassword = function(password) {
+UserSchema.methods.comparePasswords = function(password) {
 	return bcrypt.compare(password, this.password);
 };
 

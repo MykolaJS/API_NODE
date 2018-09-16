@@ -7,6 +7,9 @@ const bluebird = require("bluebird");
 
 const config = require("./config");
 const authRoute = require("./routes/auth");
+const errorHandler = require("./middlewares/errorHandler");
+const checkToken = require("./middlewares/checkToken");
+
 
 const app = express();
 
@@ -33,3 +36,8 @@ app.use(session({
 }));
 
 app.use("/api", authRoute);
+app.get("/test", checkToken, (req, res) => {
+	res.json("test");
+})
+
+app.use(errorHandler);
