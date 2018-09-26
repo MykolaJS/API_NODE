@@ -1,5 +1,5 @@
 const config = {
-	database: 'mongodb://localhost:27017/coaxevent',
+	database: 'mongodb://MykolaVasylkiv:ZKxU9FpXPBT5cMH@ds115283.mlab.com:15283/apipdp',
 	port: 3000,
 	secret: 'verysecret'
 };
