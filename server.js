@@ -14,13 +14,13 @@ const checkToken = require("./middlewares/checkToken");
 const app = express();
 
 mongoose.Promise = bluebird;
-mongoose.connect(config.database, err => {
+mongoose.connect( process.env.MONGODB_URI || config.database, err => {
 	if(err) console.log(err);
 
 	console.log("Mongo Connect");
 })
 
-app.listen(config.port, err => {
+app.listen(process.env.PORT || config.port, err => {
 	if (err) console.log(err);
 
 	console.log(`Server listening on port ${config.port}`);
