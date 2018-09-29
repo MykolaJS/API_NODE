@@ -7,8 +7,11 @@ const bluebird = require("bluebird");
 
 const config = require("./config");
 const authRoute = require("./routes/auth");
+const userRoute = require("./routes/user");
+const pageRoute = require("./routes/page");
 const errorHandler = require("./middlewares/errorHandler");
 const checkToken = require("./middlewares/checkToken");
+const getUser = require("./middlewares/getUser");
 
 
 const app = express();
@@ -26,7 +29,7 @@ app.listen(process.env.PORT || config.port, err => {
 	console.log(`Server listening on port ${config.port}`);
 });
 
-app.use(morgan("combined"));
+app.use(morgan("tiny"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -36,8 +39,8 @@ app.use(session({
 }));
 
 app.use("/api", authRoute);
-app.get("/test", checkToken, (req, res) => {
-	res.json("test");
-})
+app.use("/api", checkToken, userRoute);
+app.use(getUser);
+app.use("/api", checkToken, pageRoute);
 
 app.use(errorHandler);

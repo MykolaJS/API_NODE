@@ -7,19 +7,21 @@ module.exports = async (req, res, next) => {
 	let tokenObj = null;
 
 	if(!token) {
-		return res
-			.status(403)
-			.json({ message: "Forbidden. No token!" });
+		return	next({
+			status: 403,
+			message: "Forbidden. No Token!"
+		})
 	}
 
 	try {
 		tokenObj = jwt.verify(token, config.secret);
 	} catch ({ message }) {
-		return res
-			.status(400)
-			.json({ message });
+		return next({
+			status: 400,
+			message
+		})
 	}
 
-	console.log(tokenObj)
+	req.token = tokenObj;
 	next()
 }
