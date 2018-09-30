@@ -29,6 +29,14 @@ app.listen(process.env.PORT || config.port, err => {
 	console.log(`Server listening on port ${config.port}`);
 });
 
+app.use(morgan("tiny"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+	resave: true,
+	saveUnitialized: true,
+	secret: process.env.SECRET || config.secret
+}));
 
 
 
