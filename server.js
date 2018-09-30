@@ -38,6 +38,8 @@ app.use(session({
 	secret: process.env.SECRET || config.secret
 }));
 
+
+
 app.use("/api", authRoute);
 app.use("/api", checkToken, userRoute);
 app.use(getUser);
