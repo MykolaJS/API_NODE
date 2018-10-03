@@ -17,7 +17,7 @@ const getUser = require("./middlewares/getUser");
 const app = express();
 
 mongoose.Promise = bluebird;
-mongoose.connect( process.env.MONGODB_URI || config.database, err => {
+mongoose.connect( process.env.MONGOLAB_GRAY_URI || config.database, err => {
 	if(err) console.log(err);
 
 	console.log("Mongo Connect");
@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
 	resave: true,
 	saveUnitialized: true,
-	secret: process.env.SECRET || config.secret
+	secret: process.env.MONGOLAB_GRAY_URI || config.secret
 }));
 
 
