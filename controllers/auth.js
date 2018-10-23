@@ -6,15 +6,16 @@ const Token = require("../models/token");
 const config = require("../config");
 
 const singup = async (req, res, next) => {
-	const user = await User.findOne({ email: req.body.email });
-	if (user) {
+	const checkUser = await User.findOne({ email: req.body.email });
+	let user;
+	if (checkUser) {
 		return next({
 			statu: 400,
 			message: "The email address you have entered is already associated with another account."
 		})
 	}
 	try {
-		const user = new User({ 
+		user = new User({ 
 		    name: req.body.name, 
 		    email: req.body.email, 
 		    password: req.body.password 
@@ -51,6 +52,8 @@ const singup = async (req, res, next) => {
 		status: 400
 		message
 	};
+
+	res.json(user);
 };
 
 const singin = async (req, res, next) => {
