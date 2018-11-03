@@ -40,7 +40,7 @@ const singup = async (req, res, next) => {
 	            	from: "mvasilkiv21@gmail.com", 
 	            	to: user.email, 
 	            	subject: "Account Verification Token", 
-	            	text: "Hello,\n\n" + "Please verify your account by clicking the link: \nhttp:\/\/" + req.headers.host + "/confirmation/" + token.token + ".\n" 
+	            	text: "Hello,\n\n" + "Please verify your account by clicking the link: \nhttp:\/\/" + req.headers.host + "/api/confirmation/" + token.token + ".\n" 
 	            };
 	            transporter.sendMail(mailOptions,  err => {
 	                if (err)  return res.status(500).send({ msg: err.message });
