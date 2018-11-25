@@ -1,20 +1,46 @@
+const OneSignal = require("onesignal-node") ; 
+
 const Page = require("../models/page");
 const User = require("../models/user");
 
-const create = async (req, res, next) => {
-	const pageData = req.body;
-	const userId = req.user._id;
+const myClient = new OneSignal.Client({    
+   userAuthKey: "MWY1MTllZGItOGUyNy00ZTY3LWE5OGMtZGIxNmYwZjk4NDZ",       
+   app: { appAuthKey: 'N2ZlZjdkOGQtM2QzZi00M2IyLWFiNTItZGEyZjdlMWJhNzI3', appId: '3732f321-f09f-4b83-b524-d77567d9a98e' }    
+});
 
+const firstNotification = new OneSignal.Notification({    
+    contents: {    
+        en: "",    
+        tr: ""   
+    },  
+    included_segments: ["Active Users", "Inactive Users"]  
+});    
+
+const create = async (req, res, next) => {
+	const pageData = req.body; 
+	const userId = req.user._id;
+	const userName = req.user.name;
+
+	pageData.name = userName;
 	pageData.userId = userId;
+
 	let page = null;
 	try {
 		page = await Page.create(pageData);
-	} catch ({ message }) {
+	} catch ({ message }) { 
 		return next({
 			status: 400,
 			message
 		});
 	}
+	firstNotification.postBody["contents"] = {"en": ` User ${userName} Create Post` };
+	myClient.sendNotification(firstNotification, async (err, httpResponse, data) => {
+		try {
+			console.log(data, httpResponse.statusCode);
+		} catch(err) {
+			console.log(err);   
+		}
+	});    
 
 	res.json(page);
 }; 

@@ -18,7 +18,8 @@
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.2.14",
     "morgan": "^1.9.1",
-    "nodemailer": "^4.6.8"
+    "nodemailer": "^4.6.8",
+    "onesignal-node": "^2.0.1"
   },
   "engines": {
     "node": ">= 9.4.0"

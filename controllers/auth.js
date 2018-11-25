@@ -57,7 +57,7 @@ const singup = async (req, res, next) => {
 };
 
 const singin = async (req, res, next) => {
-	const { email, password, isVerified } = req.body;
+	const { email, password } = req.body;
 
 	const user = await User.findOne({ email });
 	if (!user) {
@@ -65,6 +65,13 @@ const singin = async (req, res, next) => {
 			status: 400,
 			message: "User not found"
 		});
+	}
+
+	if(!user.isVerified) {
+		return next({
+			status: 500,
+			message: "User Not Verified"
+		})
 	};
 
 	try {
@@ -82,12 +89,13 @@ const singin = async (req, res, next) => {
 
 const confirmationPost = async (req, res, next) => {
     const token = await Token.findOne({ token: req.params.token });
-    	if (!token) return res.status(400).send({ 
-        	type: "not-verified", 
-        	msg: "We were unable to find a valid token. Your token my have expired." 
-        });
- 
     const user = await User.findOne({ _id: token._userId });
+    
+	if (!token) return res.status(400).send({ 
+    	type: "not-verified", 
+    	msg: "We were unable to find a valid token. Your token my have expired." 
+    });
+ 
     if (!user) return res.status(400).send({ msg: "We were unable to find a user for this token." });
     if (user.isVerified) return res.status(400).send({
        	type: "already-verified", 
