@@ -10,7 +10,9 @@ const UserSchema = new Schema({
 	},
 	name: String,
 	password: String,
-	isVerified: { type: Boolean, default: false }
+	isVerified: { type: Boolean, default: false },
+	isAdmin: {type: Boolean, default: false },
+	blocked: { type: Boolean, default: false }
 });
 
 UserSchema.pre("save", async function(next) {
