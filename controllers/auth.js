@@ -27,7 +27,7 @@ const singup = async (req, res, next) => {
 	        	_userId: user._id, 
 	        	token: crypto.randomBytes(16).toString("hex") 
 	        });
-	        token.save( err => {
+	        token.save(err => {
 	        	if (err) return res.status(500).send({ msg: err.message });
 	            const transporter = nodemailer.createTransport({ 
 	            	service: "gmail", 
@@ -89,7 +89,7 @@ const singin = async (req, res, next) => {
 
 const singInFacebook = async (req, res, next) => {
 	const { name, socialId, image } = req.body;
-	let user = await User.findOne({ email: socialId });
+	let user = await User.findOne({ socialId });
 	if (!user) {
 		user = new User({ 
 		    name: name, 
@@ -102,25 +102,8 @@ const singInFacebook = async (req, res, next) => {
 
 		user.save(err => {
 			if (err) return res.status(500).send({ msg: err.message });
-			const token = new Token({ 
-	        	_userId: user._id, 
-	        	token: crypto.randomBytes(16).toString("hex") 
-			});
-			
-			token.save( err => {
-				if (err) return res.status(500).send({ msg: err.message });
-			})
 	    });
 	}
-
-	try {
-		const result = await user.comparePasswords(socialId);
-	} catch(e) {
-		return next({
-			status: 400,
-			message: "Bad Credentials" 
-		});
-	};
 
 	const token = jwt.sign({ _id: user._id }, config.secret);
 	res.json(token);
