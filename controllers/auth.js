@@ -87,6 +87,45 @@ const singin = async (req, res, next) => {
 	res.json(token);
 };
 
+const singInFacebook = async (req, res, next) => {
+	const { name, socialId, image } = req.body;
+	let user = await User.findOne({ email: socialId });
+	if (!user) {
+		user = new User({ 
+		    name: name, 
+			email: socialId,
+			password: socialId,
+			isVerified: true,
+			image,
+			socialId
+		});
+
+		user.save(err => {
+			if (err) return res.status(500).send({ msg: err.message });
+			const token = new Token({ 
+	        	_userId: user._id, 
+	        	token: crypto.randomBytes(16).toString("hex") 
+			});
+			
+			token.save( err => {
+				if (err) return res.status(500).send({ msg: err.message });
+			})
+	    });
+	}
+
+	try {
+		const result = await user.comparePasswords(socialId);
+	} catch(e) {
+		return next({
+			status: 400,
+			message: "Bad Credentials" 
+		});
+	};
+
+	const token = jwt.sign({ _id: user._id }, config.secret);
+	res.json(token);
+};
+
 const confirmationPost = async (req, res, next) => {
     const token = await Token.findOne({ token: req.params.token });
     const user = await User.findOne({ _id: token._userId });
@@ -111,4 +150,5 @@ const confirmationPost = async (req, res, next) => {
 
 module.exports.singup = singup; 
 module.exports.singin = singin;
+module.exports.singInFacebook = singInFacebook;
 module.exports.confirmationPost = confirmationPost;

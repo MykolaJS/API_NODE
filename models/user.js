@@ -9,6 +9,8 @@ const UserSchema = new Schema({
 		index: true
 	},
 	name: String,
+	image: String,
+	socialId: { type: Number, default: null },
 	password: String,
 	isVerified: { type: Boolean, default: false },
 	isAdmin: {type: Boolean, default: false },

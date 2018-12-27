@@ -4,7 +4,8 @@ module.exports.getCurrentUser = async function getCurrentUser(req, res, next) {
 	const { token } = req;
 	let user = null;
 	try {
-	 	user = await UserService.getUserByToken(token)
+		 user = await UserService.getUserByToken(token)
+		 console.log(token)
 	} catch ({ message }) {
 		return next({
 			status: 500,
@@ -28,7 +29,7 @@ module.exports.makeAdmin = async function getAllUsers(req, res, next) {
 	 			message: "You are not an admin"
 	 		})
 	 	}
-	 	user.isAdmin = true;
+	 	user.isAdmin = !isAdmin;
 	 	user.save();
 	
 	} catch ({ message }) {
@@ -67,7 +68,7 @@ module.exports.blockUser = async function blockUser(req, res, next) {
 	 			message: "You are not an admin"
 	 		})
 	 	}
-	 	user.blocked = true;
+	 	user.blocked = !user.blocked;
 	 	user.save();
 	} catch ({ message }) {
 		return next({
